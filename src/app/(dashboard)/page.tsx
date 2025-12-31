@@ -6,7 +6,7 @@ import QuickStart from '@/components/portal/QuickStart';
 
 export default function PortalPage() {
   return (
-    <div className="max-w-400 mx-auto p-4 space-y-12">
+    <div className="max-container mx-auto p-4 space-y-12">
       <PortalHero />
       <FeatureShowcase />
       <ScenarioBuilder />
