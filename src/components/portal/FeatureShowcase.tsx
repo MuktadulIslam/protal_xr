@@ -17,6 +17,7 @@ const features = [
     description: 'Design realistic 3D training scenarios that simulate real-world situations',
     animation: virtualRealityAnimation,
     gradient: 'from-cyan-500 to-blue-500',
+    scale: 0.8
   },
   {
     icon: HiCube,
@@ -24,6 +25,7 @@ const features = [
     description: 'Create complex scenarios using our intuitive drag-and-drop interface',
     animation: codingAnimation,
     gradient: 'from-blue-500 to-purple-500',
+    scale: 1
   },
   {
     icon: HiSparkles,
@@ -31,6 +33,7 @@ const features = [
     description: 'Get objective insights on non-technical skills with our AI evaluator',
     animation: technicalSkillsAnimation,
     gradient: 'from-purple-500 to-pink-500',
+    scale: 0.8
   },
 ];
 
@@ -69,6 +72,7 @@ export default function FeatureShowcase() {
                 <Lottie
                   animationData={feature.animation}
                   loop={true}
+                  style={{ transform: `scale(${feature.scale})` }}
                   className="w-full h-full scale-125"
                 />
               </div>
