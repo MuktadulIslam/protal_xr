@@ -1,0 +1,200 @@
+// src/components/portal/Sidebar.tsx
+'use client';
+
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import {
+  HiHome,
+  HiCube,
+  HiSparkles,
+  HiDocumentText,
+  HiCog,
+  HiQuestionMarkCircle,
+} from 'react-icons/hi2';
+import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
+import { FaRobot } from 'react-icons/fa';
+
+const topMenuItems = [
+  { icon: HiHome, label: 'Dashboard', href: '/' },
+  { icon: HiCube, label: 'Scenarios', href: '/' },
+  { icon: FaRobot, label: 'AI Models', href: '/' },
+  { icon: HiSparkles, label: 'Templates', href: '/' },
+  { icon: HiDocumentText, label: 'Projects', href: '/' },
+];
+// const topMenuItems = [
+//   { icon: HiHome, label: 'Dashboard', href: '/portal' },
+//   { icon: HiCube, label: 'Scenarios', href: '/portal/scenarios' },
+//   { icon: FaRobot, label: 'AI Models', href: '/portal/models' },
+//   { icon: HiSparkles, label: 'Templates', href: '/portal/templates' },
+//   { icon: HiDocumentText, label: 'Projects', href: '/portal/projects' },
+// ];
+
+const bottomMenuItems = [
+  { icon: HiCog, label: 'Settings', href: '/portal/settings' },
+  { icon: HiQuestionMarkCircle, label: 'Help', href: '/portal/help' },
+];
+
+export default function Sidebar() {
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  // Mock user data - replace with actual user data
+  const user = {
+    name: 'Hamza Afzaal',
+    email: 'hamza.afzaal@craftxr.io',
+    image: '/images/profiles/profile1.png',
+  };
+
+  return (
+    <motion.aside
+      initial={false}
+      animate={{ width: isExpanded ? 230 : 55 }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      className="h-screen sticky top-0 bg-white border-r border-gray-200 shadow-sm flex flex-col"
+    >
+      {/* Header */}
+      <div className="h-14 border-b border-gray-200 flex items-center justify-between pl-3 pr-1 shrink-0">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center gap-3 hover:opacity-70 transition-opacity"
+        >
+          <AnimatePresence mode="wait">
+            {isExpanded ? (
+              <motion.div
+                key="full-logo"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Image
+                  src="/logo/craftxr-ryan.png"
+                  alt="CraftXR"
+                  width={150}
+                  height={50}
+                  className="h-10 w-auto"
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="mini-logo"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="text-2xl font-bold bg-linear-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent"
+              >
+                XR
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </button>
+
+        <AnimatePresence>
+          {isExpanded && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsExpanded(false)}
+              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <MdKeyboardDoubleArrowLeft className="w-8 h-8 text-gray-600" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Top Menu Items */}
+      <nav className="flex-1 py-4 overflow-y-auto">
+        <ul className="space-y-1 px-1">
+          {topMenuItems.map((item, index) => (
+            <li key={index}>
+              <Link
+                href={item.href}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-linear-to-r hover:from-cyan-50 hover:to-blue-50 transition-all duration-200 group"
+              >
+                <item.icon className="w-5 h-5 text-gray-600 group-hover:text-cyan-600 shrink-0 transition-colors" />
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.span
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: 'auto' }}
+                      exit={{ opacity: 0, width: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="text-sm font-medium text-gray-700 group-hover:text-cyan-700 whitespace-nowrap overflow-hidden"
+                    >
+                      {item.label}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* Bottom Section */}
+      <div className="border-t border-gray-200 py-1 px-1 space-y-1">
+        {/* Settings & Help */}
+        {bottomMenuItems.map((item, index) => (
+          <Link
+            key={index}
+            href={item.href}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-linear-to-r hover:from-cyan-50 hover:to-blue-50 transition-all duration-200 group"
+          >
+            <item.icon className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 shrink-0 transition-colors" />
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.span
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: 'auto' }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-sm font-medium text-gray-700 group-hover:text-cyan-700 whitespace-nowrap overflow-hidden"
+                >
+                  {item.label}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </Link>
+        ))}
+
+        {/* User Profile */}
+        <div className="border-t border-gray-200">
+          <div className="flex items-center gap-3 px-1 py-1">
+            <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-gray-200 shrink-0">
+              <Image
+                src="/logo/profile1.png"
+                alt={user.name}
+                width={36}
+                height={36}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.div
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: 'auto' }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <p className="text-sm font-semibold text-gray-800 whitespace-nowrap">
+                    {user.name}
+                  </p>
+                  <p className="text-xs text-gray-500 whitespace-nowrap truncate max-full-w">
+                    {user.email}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+    </motion.aside>
+  );
+}
