@@ -5,6 +5,7 @@ import { config, apiConfig  } from '@/config';
 import { storeTokens } from '@/utils/authToken';
 import { useRouter } from 'next/navigation';
 import { unprotectedAxiosInstance } from '@/config/axios.config';
+import { showErrorToast } from '@/utils';
 
 export const useLogin = () => {
     const router = useRouter();
@@ -41,7 +42,7 @@ export const useLogin = () => {
             router.refresh();
         },
         onError: () => {
-            alert("Incorrect username or password")
+            showErrorToast("Incorrect username or password")
         }
     });
 };

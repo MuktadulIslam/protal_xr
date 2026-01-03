@@ -2,6 +2,7 @@ import axios from 'axios';
 import { getAccessToken, getRefreshToken, storeAccessToken, storeRefreshToken } from '@/utils';
 import { apiConfig, routePaths, config as appConfig } from '@/config';
 import { RefreshTokenResponse } from '@/types';
+import { showErrorToast } from '@/utils';
 
 // Create axios instance
 const axiosInstance = axios.create({
@@ -24,7 +25,7 @@ axiosInstance.interceptors.request.use(
                 const refreshToken = getRefreshToken();
                 if (!refreshToken) {
                     console.warn('No refresh token available to fetch access token');
-                    alert('Your session has expired. Please login again.');
+                    showErrorToast('Your session has expired. Please login again.');
 
                     // Create URL object with login path and current location as callback
                     const url = new URL(routePaths.login, window.location.origin);
@@ -70,7 +71,7 @@ axiosInstance.interceptors.response.use(
             storeAccessToken('');
             storeRefreshToken('');
 
-            alert('Your session has expired. Please login again.');
+            showErrorToast('Your session has expired. Please login again.');
 
             const url = new URL(routePaths.login, window.location.origin);
             url.searchParams.set(appConfig.callbackUrlName, window.location.pathname + window.location.search);
