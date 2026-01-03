@@ -18,10 +18,11 @@ import { FaRobot } from 'react-icons/fa';
 
 const topMenuItems = [
   { icon: HiHome, label: 'Dashboard', href: '/' },
-  { icon: HiCube, label: 'Scenarios', href: '/' },
-  { icon: FaRobot, label: 'AI Models', href: '/' },
-  { icon: HiSparkles, label: 'Templates', href: '/' },
-  { icon: HiDocumentText, label: 'Projects', href: '/' },
+  { icon: HiCube, label: 'Programe', href: '/' },
+  { icon: FaRobot, label: 'Simulation', href: '/' },
+  { icon: HiSparkles, label: 'Evaluation', href: '/' },
+  { icon: HiDocumentText, label: 'Assets', href: '/' },
+  { icon: HiDocumentText, label: 'Institutes', href: '/' },
 ];
 // const topMenuItems = [
 //   { icon: HiHome, label: 'Dashboard', href: '/portal' },
@@ -55,28 +56,29 @@ export default function Sidebar() {
     >
       {/* Header */}
       <div className="h-14 border-b border-gray-200 flex items-center justify-between pl-3 pr-1 shrink-0">
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center gap-3 hover:opacity-70 transition-opacity"
-        >
-          <AnimatePresence mode="wait">
-            {isExpanded ? (
-              <motion.div
-                key="full-logo"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Image
-                  src="/logo/craftxr-ryan.png"
-                  alt="CraftXR"
-                  width={150}
-                  height={50}
-                  className="h-10 w-auto"
-                />
-              </motion.div>
-            ) : (
+        <AnimatePresence mode="wait">
+          {isExpanded ? (
+            <motion.a
+              href='/'
+              key="full-logo"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Image
+                src="/logo/craftxr-ryan.png"
+                alt="CraftXR"
+                width={150}
+                height={50}
+                className="h-10 w-auto"
+              />
+            </motion.a>
+          ) : (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex items-center gap-3 hover:opacity-70 transition-opacity"
+            >
               <motion.div
                 key="mini-logo"
                 initial={{ opacity: 0 }}
@@ -87,9 +89,9 @@ export default function Sidebar() {
               >
                 XR
               </motion.div>
-            )}
-          </AnimatePresence>
-        </button>
+            </button>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence>
           {isExpanded && (
