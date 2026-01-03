@@ -166,7 +166,7 @@ export default function Sidebar() {
                 )}
               </AnimatePresence>
             </Link>
-            : <></>
+            : <div key={index}></div>
         ))}
 
         {/* User Profile */}

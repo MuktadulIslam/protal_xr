@@ -10,7 +10,7 @@ export default function PortalPage() {
       <PortalHero />
       <FeatureShowcase />
       <ScenarioBuilder />
-      <QuickStart />
+      {/* <QuickStart /> */}
     </div>
   );
 }
