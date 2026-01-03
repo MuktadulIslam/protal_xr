@@ -9,20 +9,22 @@ import {
   HiHome,
   HiCube,
   HiSparkles,
-  HiDocumentText,
   HiCog,
   HiQuestionMarkCircle,
+  HiRectangleStack,
+  HiBuildingLibrary,
+  HiCalendarDays,
 } from 'react-icons/hi2';
-import { MdKeyboardDoubleArrowLeft } from "react-icons/md";
-import { FaRobot } from 'react-icons/fa';
+import { MdPersonAddAlt1 } from "react-icons/md";
+import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 
 const topMenuItems = [
   { icon: HiHome, label: 'Dashboard', href: '/' },
-  { icon: HiCube, label: 'Programe', href: '/' },
-  { icon: FaRobot, label: 'Simulation', href: '/' },
+  { icon: HiCalendarDays, label: 'Programs', href: '/' },
+  { icon: HiCube, label: 'Simulations', href: '/' },
   { icon: HiSparkles, label: 'Evaluation', href: '/' },
-  { icon: HiDocumentText, label: 'Assets', href: '/' },
-  { icon: HiDocumentText, label: 'Institutes', href: '/' },
+  { icon: HiRectangleStack, label: 'Assets', href: '/' },
+  { icon: HiBuildingLibrary, label: 'Institutes', href: '/' },
 ];
 // const topMenuItems = [
 //   { icon: HiHome, label: 'Dashboard', href: '/portal' },
@@ -33,8 +35,9 @@ const topMenuItems = [
 // ];
 
 const bottomMenuItems = [
-  { icon: HiCog, label: 'Settings', href: '/portal/settings' },
-  { icon: HiQuestionMarkCircle, label: 'Help', href: '/portal/help' },
+  { icon: HiCog, label: 'Settings', href: '/', show: true },
+  { icon: HiQuestionMarkCircle, label: 'Help', href: '/', show: true },
+  { icon: MdPersonAddAlt1, label: 'Add New User', href: '/', show: false },
 ];
 
 export default function Sidebar() {
@@ -110,8 +113,8 @@ export default function Sidebar() {
       </div>
 
       {/* Top Menu Items */}
-      <nav className="flex-1 py-4 overflow-y-auto">
-        <ul className="space-y-1 px-1">
+      <nav className="flex-1 pt-1 pb-4 overflow-y-auto">
+        <ul className="px-1">
           {topMenuItems.map((item, index) => (
             <li key={index}>
               <Link
@@ -139,29 +142,31 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom Section */}
-      <div className="border-t border-gray-200 py-1 px-1 space-y-1">
+      <div className="border-t border-gray-200 py-1 px-1">
         {/* Settings & Help */}
         {bottomMenuItems.map((item, index) => (
-          <Link
-            key={index}
-            href={item.href}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-linear-to-r hover:from-cyan-50 hover:to-blue-50 transition-all duration-200 group"
-          >
-            <item.icon className="w-6 h-6 text-gray-600 group-hover:text-cyan-600 shrink-0 transition-colors" />
-            <AnimatePresence>
-              {isExpanded && (
-                <motion.span
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="text-sm font-medium text-gray-700 group-hover:text-cyan-700 whitespace-nowrap overflow-hidden"
-                >
-                  {item.label}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </Link>
+          item.show ?
+            <Link
+              key={index}
+              href={item.href}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-linear-to-r hover:from-cyan-50 hover:to-blue-50 transition-all duration-200 group"
+            >
+              <item.icon className="w-5 h-5 text-gray-600 group-hover:text-cyan-600 shrink-0 transition-colors" />
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.span
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: 'auto' }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="text-sm font-medium text-gray-700 group-hover:text-cyan-700 whitespace-nowrap overflow-hidden"
+                  >
+                    {item.label}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </Link>
+            : <></>
         ))}
 
         {/* User Profile */}
