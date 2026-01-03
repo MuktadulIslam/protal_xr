@@ -75,7 +75,7 @@ export default function PortalBranding() {
                                 repeat: Infinity,
                                 ease: "easeInOut"
                             }}
-                            className="absolute -top-8 -left-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 border border-emerald-200/50"
+                            className="absolute -top-6 -left-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-2.5 border border-emerald-200/50"
                         >
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 bg-linear-to-br from-emerald-400 to-teal-400 rounded-xl flex items-center justify-center">
@@ -98,7 +98,7 @@ export default function PortalBranding() {
                                 ease: "easeInOut",
                                 delay: 1
                             }}
-                            className="absolute -bottom-4 -right-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 border border-cyan-200/50"
+                            className="absolute -bottom-4 -right-8 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-2.5 border border-cyan-200/50"
                         >
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 bg-linear-to-br from-cyan-400 to-blue-400 rounded-xl flex items-center justify-center">
@@ -123,7 +123,7 @@ export default function PortalBranding() {
                                 ease: "easeInOut",
                                 delay: 0.5
                             }}
-                            className="absolute top-1/2 -left-12 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-4 border border-purple-200/50"
+                            className="absolute top-1/2 -left-12 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-2.5 border border-purple-200/50"
                         >
                             <div className="flex items-center gap-3">
                                 <div className="w-12 h-12 bg-linear-to-br from-purple-400 to-pink-400 rounded-xl flex items-center justify-center">

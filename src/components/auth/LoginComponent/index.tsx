@@ -1,23 +1,23 @@
 // src/app/login/page.tsx
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { HiLockClosed, HiUser } from 'react-icons/hi2';
+import { HiLockClosed, HiUser, HiEye, HiEyeSlash } from 'react-icons/hi2';
+import { useForm } from 'react-hook-form';
+import { useLogin } from '@/hooks/useAuth.hook';
+import { UserLoginRequest } from '@/types';
 import PortalBranding from './PortalBranding';
+import { useState } from 'react';
 
 export default function LoginComponent() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const { register, handleSubmit, formState: { errors } } = useForm<UserLoginRequest>();
+    const { mutate: login, isPending } = useLogin();
+    const [showPassword, setShowPassword] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoading(true);
-        // Add your login logic here
-        setTimeout(() => setIsLoading(false), 2000);
+    const onSubmit = (data: UserLoginRequest) => {
+        login(data);
     };
 
     return (
@@ -55,7 +55,7 @@ export default function LoginComponent() {
                     </div>
 
                     {/* Login Form */}
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         {/* Username Field */}
                         <div>
                             <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-1">
@@ -67,15 +67,15 @@ export default function LoginComponent() {
                                 </div>
                                 <input
                                     id="username"
-                                    name="username"
                                     type="text"
-                                    required
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    {...register('username', { required: 'Username is required' })}
                                     className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
                                     placeholder="Enter your username"
                                 />
                             </div>
+                            {errors.username && (
+                                <p className="mt-1 text-sm text-red-600">{errors.username.message}</p>
+                            )}
                         </div>
 
                         {/* Password Field */}
@@ -89,26 +89,37 @@ export default function LoginComponent() {
                                 </div>
                                 <input
                                     id="password"
-                                    name="password"
-                                    type="password"
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
+                                    type={showPassword ? "text" : "password"}
+                                    {...register('password', { required: 'Password is required' })}
+                                    className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
                                     placeholder="Enter your password"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center hover:text-gray-600 transition-colors duration-200"
+                                >
+                                    {showPassword ? (
+                                        <HiEyeSlash className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                    ) : (
+                                        <HiEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                    )}
+                                </button>
                             </div>
+                            {errors.password && (
+                                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                            )}
                         </div>
 
                         {/* Login Button */}
                         <motion.button
                             type="submit"
-                            disabled={isLoading}
+                            disabled={isPending}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             className="w-full py-2.5 px-4 bg-linear-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                         >
-                            {isLoading ? (
+                            {isPending ? (
                                 <div className="flex items-center gap-2">
                                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                     <span>Signing in...</span>
