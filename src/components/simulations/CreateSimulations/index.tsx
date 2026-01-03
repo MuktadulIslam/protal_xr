@@ -13,42 +13,49 @@ import CreateState from './steps/CreateState';
 import CreateScene from './steps/CreateScene';
 import AddObjectAnimations from './steps/AddObjectAnimations';
 import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
+import FullscreenWrapper from '@/components/common/FullscreenWrapper';
 
 const createSimulationsSteps = [
     {
         stepname: 'info',
         label: 'Info',
         icon: MdKeyboardDoubleArrowLeft,
+        fullScreenShowable: false,
         component: AddSelectionInformation
     },
     {
         stepname: 'objectives',
         label: 'Objectives',
         icon: MdKeyboardDoubleArrowLeft,
+        fullScreenShowable: false,
         component: CreateObjectives
     },
     {
         stepname: 'avatar',
         label: 'Avatar',
         icon: MdKeyboardDoubleArrowLeft,
+        fullScreenShowable: false,
         component: SelectAvatar
     },
     {
         stepname: 'state',
         label: 'State',
         icon: MdKeyboardDoubleArrowLeft,
+        fullScreenShowable: true,
         component: CreateState
     },
     {
         stepname: 'scene',
         label: 'Scene',
         icon: MdKeyboardDoubleArrowLeft,
+        fullScreenShowable: true,
         component: CreateScene
     },
     {
         stepname: 'animations',
         label: 'Animations',
         icon: MdKeyboardDoubleArrowLeft,
+        fullScreenShowable: true,
         component: AddObjectAnimations
     },
 ];
@@ -165,10 +172,12 @@ export default function CreateSimulationPage() {
                         transition={{ duration: 0.3 }}
                         className='w-full flex-1'
                     >
-                        {(() => {
-                            const StepComponent = createSimulationsSteps[currentStep - 1].component;
-                            return <StepComponent />;
-                        })()}
+                        <FullscreenWrapper showIcon={createSimulationsSteps[currentStep - 1].fullScreenShowable} fullScreenByKey={false}>
+                            {(() => {
+                                const StepComponent = createSimulationsSteps[currentStep - 1].component;
+                                return <StepComponent />;
+                            })()}
+                        </FullscreenWrapper>
                     </motion.div>
                 </AnimatePresence>
             </div>
