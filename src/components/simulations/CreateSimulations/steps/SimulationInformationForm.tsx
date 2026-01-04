@@ -17,7 +17,7 @@ interface SimulationInfoForm {
   scenario_background: string;
   scenario_additional_details: string;
   allow_duplication: boolean;
-  access_restriction: 'internal' | 'public' | 'restricted';
+  access_restriction: 'internal' | 'public';
 }
 
 export default function AddSimulationInformation() {
@@ -29,7 +29,7 @@ export default function AddSimulationInformation() {
       scenario_additional_details: readFromLocalStorage(newSimulationStorageName.simulation_additional_details) || '',
       allow_duplication: readFromLocalStorage(newSimulationStorageName.simulation_allow_duplication) === 'true' ? true :
                          readFromLocalStorage(newSimulationStorageName.simulation_allow_duplication) === 'false' ? false : true,
-      access_restriction: (readFromLocalStorage(newSimulationStorageName.simulation_access) as 'internal' | 'public' | 'restricted') || 'internal'
+      access_restriction: (readFromLocalStorage(newSimulationStorageName.simulation_access) as 'internal' | 'public') || 'internal'
     }
   });
 

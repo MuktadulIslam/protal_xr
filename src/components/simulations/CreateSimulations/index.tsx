@@ -6,7 +6,7 @@ import ProgressBar from '@/components/simulations/CreateSimulations/ProgressBar'
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi2';
 
-import AddSimulationInformation from './steps/AddSimulationInformation';
+import SimulationInformationForm from './steps/SimulationInformationForm';
 import CreateObjectives from './steps/CreateObjectives';
 import SelectAvatar from './steps/SelectAvatar';
 import CreateState from './steps/CreateState';
@@ -21,7 +21,7 @@ const createSimulationsSteps = [
         label: 'Info',
         icon: MdKeyboardDoubleArrowLeft,
         fullScreenShowable: false,
-        component: AddSimulationInformation
+        component: SimulationInformationForm
     },
     {
         stepname: 'objectives',
