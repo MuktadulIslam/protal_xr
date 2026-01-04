@@ -1,16 +1,254 @@
-// src/components/simulations/steps/Step1.tsx
+// src/components/simulations/steps/AddSelectionInformation.tsx
 'use client';
 
-export default function Step1() {
+import { useForm } from 'react-hook-form';
+import CharacterCounterFormInput from '@/components/common/CharacterCounterFormInput';
+import CharacterCounterTextarea from '@/components/common/CharacterCounterTextarea';
+import { inputMaxLength } from '@/config';
+import { motion } from 'framer-motion';
+import { HiInformationCircle } from 'react-icons/hi2';
+import SaveActionButton from '@/components/common/SaveActionButton';
+
+interface SimulationInfoForm {
+  simulation_name: string;
+  simulation_description: string;
+  scenario_background: string;
+  scenario_additional_details: string;
+  allow_duplication: boolean;
+  access_restriction: 'internal' | 'public' | 'restricted';
+}
+
+export default function AddSelectionInformation() {
+  const { register, handleSubmit, formState: { errors }, watch } = useForm<SimulationInfoForm>({
+    defaultValues: {
+      simulation_name: '',
+      simulation_description: '',
+      scenario_background: '',
+      scenario_additional_details: '',
+      allow_duplication: true,
+      access_restriction: 'internal'
+    }
+  });
+
+  const onSave = async () => {
+    await handleSubmit(onSubmit)();
+  };
+
+  const onSubmit = async (data: SimulationInfoForm) => {
+    console.log('Form submitted:', data);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log('Saved!');
+  };
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Step 1</h2>
-        <p className="text-gray-600">Content for step 1 will be added here</p>
-      </div>
-      
-      <div className="h-80 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
-        <p className="text-gray-400 text-sm">Step 1 Content Placeholder</p>
+    <div className="w-full h-full px-6 py-6 relative">
+      <SaveActionButton onSave={onSave} iconPosition="top-right" />
+
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-4"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-3 bg-linear-to-r from-cyan-500 to-blue-500 rounded-lg">
+              <HiInformationCircle className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">Simulation Information</h2>
+              <p className="text-gray-600">
+                Provide basic details about your simulation scenario
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Row 1: Simulation Name & Access Restriction */}
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Simulation Name */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-xl px-4 pt-3 pb-1 shadow-sm border border-gray-200"
+            >
+              <label htmlFor="simulation_name" className="block text-sm font-semibold text-gray-700 mb-1">
+                Simulation Name <span className="text-red-500">*</span>
+              </label>
+              <CharacterCounterFormInput
+                id="simulation_name"
+                name="simulation_name"
+                type="text"
+                formFieldName="simulation_name"
+                maxLength={inputMaxLength.simulation.title}
+                placeholder="Enter simulation name"
+                required={true}
+                requiredMessage="Simulation name is required"
+                register={register}
+                errors={errors}
+                watch={watch}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 outline-none"
+                fontSize={16}
+              />
+            </motion.div>
+
+            {/* Access Restriction */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="bg-white rounded-xl px-4 pt-3 pb-1 shadow-sm border border-gray-200"
+            >
+              <label htmlFor="access_restriction" className="block text-sm font-semibold text-gray-700 mb-1">
+                Access Restriction <span className="text-red-500">*</span>
+              </label>
+              <select
+                id="access_restriction"
+                {...register('access_restriction', {
+                  required: 'Please select an access level'
+                })}
+                className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 ${errors.access_restriction ? 'border-red-500' : 'border-gray-300'
+                  }`}
+              >
+                <option value="internal">Internal - Only within organization</option>
+                <option value="public">Public - Anyone can access</option>
+                <option value="restricted">Restricted - Specific users only</option>
+              </select>
+              {errors.access_restriction && (
+                <p className="mt-1 text-sm text-red-600">{errors.access_restriction.message}</p>
+              )}
+            </motion.div>
+          </div>
+
+          {/* Row 2: Description & Scenario Background */}
+          <div className="grid md:grid-cols-2 gap-4">
+            {/* Simulation Description */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-xl px-4 pt-3 pb-1 shadow-sm border border-gray-200"
+            >
+              <label htmlFor="simulation_description" className="block text-sm font-semibold text-gray-700 mb-1">
+                Description <span className="text-red-500">*</span>
+              </label>
+              <CharacterCounterTextarea
+                id="simulation_description"
+                name="simulation_description"
+                formFieldName="simulation_description"
+                maxLength={inputMaxLength.scenario.description}
+                placeholder="Briefly describe the simulation scenario"
+                register={register}
+                errors={errors}
+                watch={watch}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none"
+                rows={4}
+                fontSize={16}
+              />
+            </motion.div>
+
+            {/* Scenario Background */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className="bg-white rounded-xl px-4 pt-3 pb-1 shadow-sm border border-gray-200"
+            >
+              <label htmlFor="scenario_background" className="block text-sm font-semibold text-gray-700 mb-1">
+                Scenario Background <span className="text-red-500">*</span>
+              </label>
+              <CharacterCounterTextarea
+                id="scenario_background"
+                name="scenario_background"
+                formFieldName="scenario_background"
+                maxLength={inputMaxLength.scenario.overview}
+                placeholder="Provide context and background for this scenario"
+                register={register}
+                errors={errors}
+                watch={watch}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none"
+                rows={4}
+                fontSize={16}
+              />
+            </motion.div>
+          </div>
+
+          {/* Row 3: Allow Duplication Toggle */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white rounded-xl p-4 shadow-sm border border-gray-200"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <label htmlFor="allow_duplication" className="block text-sm font-semibold text-gray-700">
+                  Allow Duplication
+                </label>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Enable users to duplicate this simulation
+                </p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="allow_duplication"
+                  {...register('allow_duplication')}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+              </label>
+            </div>
+          </motion.div>
+
+          {/* Row 4: Additional Details (Full Width) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            className="bg-white rounded-xl px-4 pt-3 pb-1 shadow-sm border border-gray-200"
+          >
+            <label htmlFor="scenario_additional_details" className="block text-sm font-semibold text-gray-700 mb-1">
+              Additional Details <span className="text-red-500">*</span>
+            </label>
+            <CharacterCounterTextarea
+              id="scenario_additional_details"
+              name="scenario_additional_details"
+              formFieldName="scenario_additional_details"
+              maxLength={inputMaxLength.scenario.related_details}
+              placeholder="Add any additional information, notes, or requirements"
+              register={register}
+              errors={errors}
+              watch={watch}
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none"
+              rows={5}
+              fontSize={16}
+            />
+          </motion.div>
+        </form>
+
+        {/* Info Box */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4"
+        >
+          <div className="flex gap-3">
+            <HiInformationCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+            <div className="text-sm text-blue-800">
+              <p className="font-medium mb-1">Tips for creating effective simulations:</p>
+              <ul className="list-disc list-inside space-y-1 text-blue-700">
+                <li>Use clear, descriptive names that reflect the scenario's purpose</li>
+                <li>Provide comprehensive background information to help users understand context</li>
+                <li>Include specific details that make the scenario realistic and engaging</li>
+              </ul>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

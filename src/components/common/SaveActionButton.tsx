@@ -43,7 +43,7 @@ export default function SaveActionButton({ iconPosition = 'top-right', onSave }:
             <button
                 onClick={callOnSave}
                 disabled={isSaving}
-                className={`py-2 w-18 text-center text-sm font-medium bg-white hover:bg-linear-to-r hover:from-cyan-50 hover:to-blue-50 text-gray-600 hover:text-cyan-600 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
+                className={`py-2 w-18 text-center text-sm font-medium bg-linear-to-r from-cyan-500 to-blue-500 text-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed`}
                 aria-label="Save (Ctrl+Shift+S)"
             >
                 {isSaving ? 'Saving...' : 'Save'}
