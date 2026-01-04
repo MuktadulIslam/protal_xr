@@ -42,10 +42,10 @@ export default function FullscreenWrapper({ children, iconPosition = 'top-right'
         : 'relative w-full h-full';
 
     let positionClass: string;
-    if (iconPosition == 'top-right') positionClass = 'top-4 right-4'
-    else if (iconPosition == 'top-left') positionClass = 'top-4 left-4'
-    else if (iconPosition == 'bottom-left') positionClass = 'bottom-4 left-4'
-    else if (iconPosition == 'bottom-right') positionClass = 'bottom-4 right-4'
+    if (iconPosition == 'top-right') positionClass = 'top-3 right-3'
+    else if (iconPosition == 'top-left') positionClass = 'top-3 left-3'
+    else if (iconPosition == 'bottom-left') positionClass = 'bottom-3 left-3'
+    else if (iconPosition == 'bottom-right') positionClass = 'bottom-3 right-3'
     else positionClass = 'top-4 right-4'
 
     return (
