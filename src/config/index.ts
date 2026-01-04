@@ -4,7 +4,7 @@ export * from './route.paths';
 
 export const config = { 
   callbackUrlName: 'next',
-  localStorageSavingDuration: 500, // 0.5 seconds
+  localStorageSavingDuration: 1000, // 1 seconds
   evalutionOffsetLimit: 20,
   simulationOffsetLimit: 20,
   token: {
