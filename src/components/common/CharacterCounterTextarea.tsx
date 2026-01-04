@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import { UseFormRegister, FieldErrors, UseFormWatch } from "react-hook-form";
+import { UseFormRegister, FieldErrors, Control, useWatch } from "react-hook-form";
 
 interface CharacterCounterTextareaProps {
     name?: string;
@@ -15,7 +15,7 @@ interface CharacterCounterTextareaProps {
     textareaProps?: React.TextareaHTMLAttributes<HTMLTextAreaElement>;
     register: UseFormRegister<any>;
     errors?: FieldErrors<any>;
-    watch: UseFormWatch<any>;
+    control: Control<any>;
     fontSize?: number;
     rows?: number;
     onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
@@ -35,15 +35,19 @@ export default function CharacterCounterTextarea({
     textareaProps = {},
     register,
     errors,
-    watch,
+    control,
     fontSize = 16,
     rows = 4,
     onBlur,
     onFocus,
 }: CharacterCounterTextareaProps) {
-    // Watch the field value
-    const fieldValue = watch(formFieldName);
-    const currentLength = fieldValue?.length || 0;
+    // Use useWatch hook for proper reactivity
+    const fieldValue = useWatch({
+        control,
+        name: formFieldName,
+        defaultValue: ''
+    });
+    const currentLength = typeof fieldValue === 'string' ? fieldValue.length : 0;
 
     return (
         <div className="flex flex-col gap-0">
@@ -51,7 +55,7 @@ export default function CharacterCounterTextarea({
                 {...id ? { id } : {}}
                 {...name ? { name } : {}}
                 placeholder={placeholder}
-                className={`${errors && errors[formFieldName] ? 'border-red-500' : ''} ${className ? className : 'w-full p-2 border border-gray-700'}`}
+                className={className ? className : 'w-full p-2 border border-gray-700'}
                 style={{ fontSize: `${fontSize}px` }}
                 maxLength={maxLength}
                 rows={rows}

@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import { UseFormRegister, FieldErrors, UseFormWatch } from "react-hook-form";
+import { UseFormRegister, FieldErrors, Control, useWatch } from "react-hook-form";
 
 interface CharacterCounterFormInputProps {
     name?: string;
@@ -16,7 +16,7 @@ interface CharacterCounterFormInputProps {
     inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
     register: UseFormRegister<any>;
     errors?: FieldErrors<any>;
-    watch: UseFormWatch<any>;
+    control: Control<any>;
     fontSize?: number;
     onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
     onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -36,14 +36,18 @@ export default function CharacterCounterFormInput({
     inputProps = {},
     register,
     errors,
-    watch,
+    control,
     fontSize = 16,
     onBlur,
     onFocus,
 }: CharacterCounterFormInputProps) {
-    // Watch the field value
-    const fieldValue = watch(formFieldName);
-    const currentLength = fieldValue?.length || 0;
+    // Use useWatch hook for proper reactivity
+    const fieldValue = useWatch({
+        control,
+        name: formFieldName,
+        defaultValue: ''
+    });
+    const currentLength = typeof fieldValue === 'string' ? fieldValue.length : 0;
 
     return (
         <div className="flex flex-col gap-0">
@@ -52,7 +56,7 @@ export default function CharacterCounterFormInput({
                 {...name ? { name } : {}}
                 type={type}
                 placeholder={placeholder}
-                className={`${errors && errors[formFieldName] ? 'border-red-500' : ''} ${className ? className : 'w-full p-2 border border-gray-700'} `}
+                className={className ? className : 'w-full p-2 border border-gray-700'}
                 style={{ fontSize: `${fontSize}px` }}
                 maxLength={maxLength}
                 {...register(formFieldName, {

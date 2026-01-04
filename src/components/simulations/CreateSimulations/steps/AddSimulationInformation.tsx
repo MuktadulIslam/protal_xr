@@ -18,8 +18,8 @@ interface SimulationInfoForm {
   access_restriction: 'internal' | 'public' | 'restricted';
 }
 
-export default function AddSelectionInformation() {
-  const { register, handleSubmit, formState: { errors }, watch } = useForm<SimulationInfoForm>({
+export default function AddSimulationInformation() {
+  const { register, handleSubmit, formState: { errors }, control } = useForm<SimulationInfoForm>({
     defaultValues: {
       simulation_name: '',
       simulation_description: '',
@@ -89,8 +89,8 @@ export default function AddSelectionInformation() {
                 requiredMessage="Simulation name is required"
                 register={register}
                 errors={errors}
-                watch={watch}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 outline-none"
+                control={control}
+                className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 outline-none ${errors.simulation_name ? 'border-red-500' : 'border-gray-300'}`}
                 fontSize={16}
               />
             </motion.div>
@@ -141,10 +141,12 @@ export default function AddSelectionInformation() {
                 formFieldName="simulation_description"
                 maxLength={inputMaxLength.scenario.description}
                 placeholder="Briefly describe the simulation scenario"
+                required={true}
+                requiredMessage="Simulation description is required"
                 register={register}
                 errors={errors}
-                watch={watch}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none"
+                control={control}
+                className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none ${errors.simulation_description ? 'border-red-500' : 'border-gray-300'}`}
                 rows={4}
                 fontSize={16}
               />
@@ -166,10 +168,12 @@ export default function AddSelectionInformation() {
                 formFieldName="scenario_background"
                 maxLength={inputMaxLength.scenario.overview}
                 placeholder="Provide context and background for this scenario"
+                required={true}
+                requiredMessage="Scenario background is required"
                 register={register}
                 errors={errors}
-                watch={watch}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none"
+                control={control}
+                className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none ${errors.scenario_background ? 'border-red-500' : 'border-gray-300'}`}
                 rows={4}
                 fontSize={16}
               />
@@ -199,7 +203,7 @@ export default function AddSelectionInformation() {
                   {...register('allow_duplication')}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
               </label>
             </div>
           </motion.div>
@@ -220,10 +224,12 @@ export default function AddSelectionInformation() {
               formFieldName="scenario_additional_details"
               maxLength={inputMaxLength.scenario.related_details}
               placeholder="Add any additional information, notes, or requirements"
+              required={true}
+              requiredMessage="Additional details are required"
               register={register}
               errors={errors}
-              watch={watch}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none"
+              control={control}
+              className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none ${errors.scenario_additional_details ? 'border-red-500' : 'border-gray-300'}`}
               rows={5}
               fontSize={16}
             />
