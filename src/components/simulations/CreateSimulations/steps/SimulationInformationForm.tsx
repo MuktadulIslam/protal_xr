@@ -2,6 +2,8 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import CharacterCounterFormInput from '@/components/common/CharacterCounterFormInput';
 import CharacterCounterTextarea from '@/components/common/CharacterCounterTextarea';
 import { inputMaxLength } from '@/config';
@@ -9,7 +11,11 @@ import { motion } from 'framer-motion';
 import { HiInformationCircle } from 'react-icons/hi2';
 import SaveActionButton from '@/components/common/SaveActionButton';
 import { saveToLocalStorage, saveToLocalStorageAsync, readFromLocalStorage } from '@/utils/localStorage.service'
-import { newSimulationStorageName } from '@/utils/constants'
+import { newSimulationStorageName, simulation_id } from '@/utils/constants'
+import { useCreateSimulation } from '@/hooks/useCreateSimulation.hook';
+import { useUpdateSimulation } from '@/hooks/useUpdateSimulation.hook';
+import { useFetchSimulation } from '@/hooks/useFetchSimulation.hook';
+import LoadingScreen from '@/components/common/LoadingScreen';
 
 interface SimulationInfoForm {
   simulation_name: string;
@@ -20,18 +26,53 @@ interface SimulationInfoForm {
   access_restriction: 'internal' | 'public';
 }
 
-export default function AddSimulationInformation() {
-  const { register, handleSubmit, formState: { errors }, control } = useForm<SimulationInfoForm>({
+export default function SimulationInformationForm() {
+  const [isExistingSimulation, setIsExistingSimulation] = useState(false);
+  const { mutate: createSimulation, isPending: isPendingToCreateNewSimulation } = useCreateSimulation();
+  const { mutate: updateSimulation, isPending: isPendingToUpdateSimulation } = useUpdateSimulation();
+
+  // Fetch simulation data from API if simulationId exists
+  const searchParams = useSearchParams();
+  const simulationId = searchParams.get(simulation_id);
+  const { data: simulationData, isLoading: isFetchingSimulation } = useFetchSimulation(simulationId);
+
+  const { register, handleSubmit, formState: { errors }, control, setValue } = useForm<SimulationInfoForm>({
     defaultValues: {
-      simulation_name: readFromLocalStorage(newSimulationStorageName.simulation_name) || '',
-      simulation_description: readFromLocalStorage(newSimulationStorageName.simulation_description) || '',
-      scenario_background: readFromLocalStorage(newSimulationStorageName.simulation_scenario_background) || '',
-      scenario_additional_details: readFromLocalStorage(newSimulationStorageName.simulation_additional_details) || '',
-      allow_duplication: readFromLocalStorage(newSimulationStorageName.simulation_allow_duplication) === 'true' ? true :
-                         readFromLocalStorage(newSimulationStorageName.simulation_allow_duplication) === 'false' ? false : true,
-      access_restriction: (readFromLocalStorage(newSimulationStorageName.simulation_access) as 'internal' | 'public') || 'internal'
+      simulation_name: '',
+      simulation_description: '',
+      scenario_background: '',
+      scenario_additional_details: '',
+      allow_duplication: true,
+      access_restriction: 'internal'
     }
   });
+
+  // Load data from API or localStorage when component mounts or simulation data changes
+  useEffect(() => {
+    if (simulationData) {
+      // If API returns data, use it (Priority 1)
+      setIsExistingSimulation(true);
+      setValue('simulation_name', simulationData.simulation_name);
+      setValue('simulation_description', simulationData.simulation_description);
+      setValue('scenario_background', simulationData.scenario_background);
+      setValue('scenario_additional_details', simulationData.scenario_additional_details);
+      setValue('allow_duplication', simulationData.allow_duplication);
+      setValue('access_restriction', simulationData.access_restriction);
+    } else if (!isFetchingSimulation) {
+      // If no API data or no simulation ID, use localStorage (Priority 2)
+      const localAccessRestriction = (readFromLocalStorage(newSimulationStorageName.simulation_access) as 'internal' | 'public') || 'internal';
+      const localAllowDuplication = readFromLocalStorage(newSimulationStorageName.simulation_allow_duplication) === 'true' ? true :
+        readFromLocalStorage(newSimulationStorageName.simulation_allow_duplication) === 'false' ? false : true;
+
+      setValue('simulation_name', readFromLocalStorage(newSimulationStorageName.simulation_name) || '');
+      setValue('simulation_description', readFromLocalStorage(newSimulationStorageName.simulation_description) || '');
+      setValue('scenario_background', readFromLocalStorage(newSimulationStorageName.simulation_scenario_background) || '');
+      setValue('scenario_additional_details', readFromLocalStorage(newSimulationStorageName.simulation_additional_details) || '');
+      setValue('allow_duplication', localAllowDuplication);
+      setValue('access_restriction', localAccessRestriction);
+    }
+  }, [simulationData, isFetchingSimulation, setValue]);
+
 
   const onSave = async () => {
     await handleSubmit(onSubmit)();
@@ -39,12 +80,26 @@ export default function AddSimulationInformation() {
 
   const onSubmit = async (data: SimulationInfoForm) => {
     console.log('Form submitted:', data);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    console.log('Saved!');
+
+    if (isExistingSimulation && simulationId) {
+      // Update existing simulation
+      updateSimulation({
+        simulation_id: simulationId,
+        ...data
+      });
+    } else {
+      // Create new simulation
+      createSimulation(data);
+    }
   };
 
   return (
     <div className="w-full h-full px-6 py-6 relative">
+      {/* Full Screen Loading Overlay */}
+      {(isPendingToCreateNewSimulation || isPendingToUpdateSimulation) && (
+        <LoadingScreen message={isPendingToUpdateSimulation ? 'Updating Simulation' : 'Creating Simulation'} />
+      )}
+
       <SaveActionButton onSave={onSave} iconPosition="top-right" />
 
       <div className="max-w-7xl mx-auto">
@@ -90,7 +145,6 @@ export default function AddSimulationInformation() {
                 placeholder="Enter simulation name"
                 required={true}
                 requiredMessage="Simulation name is required"
-                register={register}
                 errors={errors}
                 control={control}
                 className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 outline-none ${errors.simulation_name ? 'border-red-500' : 'border-gray-300'}`}
@@ -157,7 +211,6 @@ export default function AddSimulationInformation() {
                 placeholder="Briefly describe the simulation scenario"
                 required={true}
                 requiredMessage="Simulation description is required"
-                register={register}
                 errors={errors}
                 control={control}
                 className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none ${errors.simulation_description ? 'border-red-500' : 'border-gray-300'}`}
@@ -190,7 +243,6 @@ export default function AddSimulationInformation() {
                 placeholder="Provide context and background for this scenario"
                 required={true}
                 requiredMessage="Scenario background is required"
-                register={register}
                 errors={errors}
                 control={control}
                 className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none ${errors.scenario_background ? 'border-red-500' : 'border-gray-300'}`}
@@ -259,7 +311,6 @@ export default function AddSimulationInformation() {
               placeholder="Add any additional information, notes, or requirements"
               required={true}
               requiredMessage="Additional details are required"
-              register={register}
               errors={errors}
               control={control}
               className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 resize-none outline-none ${errors.scenario_additional_details ? 'border-red-500' : 'border-gray-300'}`}

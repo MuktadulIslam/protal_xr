@@ -14,6 +14,7 @@ import CreateScene from './steps/CreateScene';
 import AddObjectAnimations from './steps/AddObjectAnimations';
 import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import FullscreenWrapper from '@/components/common/FullscreenWrapper';
+import { simulation_id, simulationCreateStep } from '@/utils/constants';
 
 const createSimulationsSteps = [
     {
@@ -65,12 +66,13 @@ export default function CreateSimulationPage() {
     const searchParams = useSearchParams();
     const [currentStep, setCurrentStep] = useState(1);
     const [direction, setDirection] = useState(0); // -1 for previous, 1 for next
+    const simulationId = searchParams.get(simulation_id);
 
     const TOTAL_STEPS = createSimulationsSteps.length;
 
     // Initialize step from URL on mount
     useEffect(() => {
-        const stepNameFromUrl = searchParams.get('step');
+        const stepNameFromUrl = searchParams.get(simulationCreateStep);
 
         if (stepNameFromUrl) {
             // Find step index by stepname
@@ -82,13 +84,15 @@ export default function CreateSimulationPage() {
                 setCurrentStep(stepIndex + 1);
             } else {
                 // If invalid stepname, redirect to first step
-                router.push(`/simulations/create?step=${createSimulationsSteps[0].stepname}`, { scroll: false });
+                const url = `/simulations/create?${simulationCreateStep}=${createSimulationsSteps[0].stepname}`;
+                router.push(simulationId ? `${url}&${simulation_id}=${simulationId}` : url, { scroll: false });
             }
         } else {
             // If no step in URL, redirect to first step
-            router.push(`/simulations/create?step=${createSimulationsSteps[0].stepname}`, { scroll: false });
+            const url = `/simulations/create?${simulationCreateStep}=${createSimulationsSteps[0].stepname}`;
+            router.push(simulationId ? `${url}&${simulation_id}=${simulationId}` : url, { scroll: false });
         }
-    }, [searchParams, router]);
+    }, [searchParams, router, simulationId]);
 
     // Update URL when step changes
     const updateStep = (newStep: number, dir: number) => {
@@ -96,7 +100,8 @@ export default function CreateSimulationPage() {
             setDirection(dir);
             setCurrentStep(newStep);
             const stepName = createSimulationsSteps[newStep - 1].stepname;
-            router.push(`/simulations/create?step=${stepName}`, { scroll: false });
+            const url = `/simulations/create?${simulationCreateStep}=${stepName}`;
+            router.push(simulationId ? `${url}&${simulation_id}=${simulationId}` : url, { scroll: false });
         }
     };
 

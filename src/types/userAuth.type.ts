@@ -10,7 +10,6 @@ export interface UserLoginResponse {
 }
 
 export interface RefreshTokenResponse {
-    username: string;
-    refresh: string;
+    refresh?: string;
     access: string;
 }

@@ -8,5 +8,8 @@ export const apiConfig = {
         refreshToken: `${backendBaseURL}/auth/refresh`,
         blacklistToken: `${backendBaseURL}/auth/blacklist`,
         getUserProfile: `${backendBaseURL}/auth/me`,
+        createSimulation: `${backendBaseURL}/simulations`,
+        getSimulation: (id: string) => `${backendBaseURL}/simulations/${id}`,
+        updateSimulation: (id: string) => `${backendBaseURL}/simulations/${id}`,
     },
 };
