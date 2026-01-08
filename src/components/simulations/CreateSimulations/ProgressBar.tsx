@@ -84,7 +84,7 @@ export default function ProgressBar({
                                             <HiCheck className="w-6 h-6" />
                                         </motion.div>
                                     ) : (
-                                        stepNumber
+                                        <StepIcon className="w-5 h-5" />
                                     )}
                                 </motion.div>
 

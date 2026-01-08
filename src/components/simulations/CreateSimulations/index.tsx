@@ -5,14 +5,21 @@ import { useEffect, useState } from 'react';
 import ProgressBar from '@/components/simulations/CreateSimulations/ProgressBar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiArrowLeft, HiArrowRight } from 'react-icons/hi2';
+import {
+    HiFlag,
+    HiUserCircle,
+    HiSquare3Stack3D,
+    HiCube,
+    HiSparkles
+} from 'react-icons/hi2';
 
 import SimulationInformationForm from './steps/SimulationInformationForm';
 import CreateObjectives from './steps/CreateObjectives';
 import SelectAvatar from './steps/SelectAvatar';
+import { IoInformationCircleOutline } from "react-icons/io5";
 import CreateState from './steps/CreateState';
 import CreateScene from './steps/CreateScene';
 import AddObjectAnimations from './steps/AddObjectAnimations';
-import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import FullscreenWrapper from '@/components/common/FullscreenWrapper';
 import { simulation_id, simulationCreateStep } from '@/utils/constants';
 
@@ -20,42 +27,42 @@ const createSimulationsSteps = [
     {
         stepname: 'info',
         label: 'Info',
-        icon: MdKeyboardDoubleArrowLeft,
+        icon: IoInformationCircleOutline,
         fullScreenShowable: false,
         component: SimulationInformationForm
     },
     {
         stepname: 'objectives',
         label: 'Objectives',
-        icon: MdKeyboardDoubleArrowLeft,
+        icon: HiFlag,
         fullScreenShowable: false,
         component: CreateObjectives
     },
     {
         stepname: 'avatar',
         label: 'Avatar',
-        icon: MdKeyboardDoubleArrowLeft,
+        icon: HiUserCircle,
         fullScreenShowable: false,
         component: SelectAvatar
     },
     {
         stepname: 'state',
         label: 'State',
-        icon: MdKeyboardDoubleArrowLeft,
+        icon: HiSquare3Stack3D,
         fullScreenShowable: true,
         component: CreateState
     },
     {
         stepname: 'scene',
         label: 'Scene',
-        icon: MdKeyboardDoubleArrowLeft,
+        icon: HiCube,
         fullScreenShowable: true,
         component: CreateScene
     },
     {
         stepname: 'animations',
         label: 'Animations',
-        icon: MdKeyboardDoubleArrowLeft,
+        icon: HiSparkles,
         fullScreenShowable: true,
         component: AddObjectAnimations
     },
