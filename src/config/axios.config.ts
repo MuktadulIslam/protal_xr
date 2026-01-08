@@ -40,10 +40,14 @@ axiosInstance.interceptors.request.use(
                 form.append("refresh", refreshToken);
                 const { data } = await axios.post<RefreshTokenResponse>(
                     apiConfig.endpoints.refreshToken,
-                    form
+                    { refresh: refreshToken },
+                    {
+                        headers: { 'Content-Type': 'application/json' }
+                    }
                 );
 
                 storeAccessToken(data.access);
+                token = data.access; // Update token variable with the new access token
                 console.log('Successfully refreshed new access token');
             } catch (error) {
                 console.error('Failed to fetch token:', error);
