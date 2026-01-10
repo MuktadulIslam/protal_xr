@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { simulation_id } from '@/utils/constants'
 import { useFetchAllSimulations } from '@/hooks/useFetchAllSimulations.hook'
 import { useEffect, useState } from 'react'
+import { FaChevronDown } from "react-icons/fa";
 
 interface StepsHeaderProps {
     icon: IconType;
@@ -24,7 +25,7 @@ export default function StepsHeader({
 }: StepsHeaderProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { data: simulations } = useFetchAllSimulations();
+    const { data: simulations, isLoading: isAllSimulationLoading } = useFetchAllSimulations();
     const [currentSelectedId, seCurrentSelectedId] = useState<string>('');
 
     // Automatically detect simulation ID from URL and set it
@@ -75,7 +76,7 @@ export default function StepsHeader({
                         initial={{ opacity: 0, x: 10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="w-100 flex gap-2 "
+                        className="w-100 flex gap-2 relative"
                     >
                         <label htmlFor="header_simulation_select" className="flex items-center gap-2 text-sm font-bold text-gray-800 mb-1">
                             <span className="w-1.5 h-5 bg-linear-to-b from-cyan-500 to-blue-600 rounded-full"></span>
@@ -85,15 +86,19 @@ export default function StepsHeader({
                             id="header_simulation_select"
                             value={currentSelectedId}
                             onChange={(e) => handleSimulationChange(e.target.value)}
-                            className="flex-1 pl-4 pr-10 py-1.5 border-2 border-gray-300 bg-linear-to-br from-white to-gray-50 rounded-sm hover:border-cyan-200 focus:border-cyan-500 focus:bg-white transition-all duration-200 font-semibold outline-none text-sm shadow-sm appearance-none cursor-pointer"
+                            className="peer flex-1 pl-4 pr-10 py-1.5 border-2 border-gray-300 bg-linear-to-br from-white to-gray-50 rounded-sm hover:border-cyan-200 focus:border-cyan-500 focus:bg-white transition-all duration-200 font-semibold outline-none text-sm shadow-sm appearance-none cursor-pointer"
                         >
-                            <option value="" disabled>Choose simulation...</option>
+                            {isAllSimulationLoading ?
+                                <option value="" disabled>Simulations Loading...</option> :
+                                <option value="" disabled>Choose simulation...</option>
+                            }
                             {simulations.map((sim) => (
                                 <option key={sim.simulation_id} value={sim.simulation_id}>
                                     {sim.simulation_name}
                                 </option>
                             ))}
                         </select>
+                        <FaChevronDown className="absolute right-2 top-[30%] text-gray-700 peer-open:rotate-180 transition-transform duration-300 pointer-events-none" size={15}/>
                     </motion.div>
                 )}
             </div>
