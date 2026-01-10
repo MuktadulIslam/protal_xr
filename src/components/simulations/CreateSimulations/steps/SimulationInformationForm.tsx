@@ -8,9 +8,10 @@ import CharacterCounterFormInput from '@/components/common/CharacterCounterFormI
 import CharacterCounterTextarea from '@/components/common/CharacterCounterTextarea';
 import { inputMaxLength } from '@/config';
 import { motion } from 'framer-motion';
-import { HiInformationCircle } from 'react-icons/hi2';
+import { HiInformationCircle, HiLightBulb } from 'react-icons/hi2';
 import SaveActionButton from '@/components/common/SaveActionButton';
 import StepsHeader from './StepsHeader';
+import StepInfoBox from './StepInfoBox';
 import { saveToLocalStorage, saveToLocalStorageAsync, readFromLocalStorage } from '@/utils/localStorage.service'
 import { newSimulationStorageName, simulation_id } from '@/utils/constants'
 import { useCreateSimulation } from '@/hooks/useCreateSimulation.hook';
@@ -317,24 +318,16 @@ export default function SimulationInformationForm() {
         </form>
 
         {/* Info Box */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4"
-        >
-          <div className="flex gap-3">
-            <HiInformationCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-            <div className="text-sm text-blue-800">
-              <p className="font-medium mb-1">Tips for creating effective simulations:</p>
-              <ul className="list-disc list-inside space-y-1 text-blue-700">
-                <li>Use clear, descriptive names that reflect the scenario's purpose</li>
-                <li>Provide comprehensive background information to help users understand context</li>
-                <li>Include specific details that make the scenario realistic and engaging</li>
-              </ul>
-            </div>
-          </div>
-        </motion.div>
+        <StepInfoBox
+          icon={HiLightBulb}
+          heading="Tips for creating effective simulations"
+          instructions={[
+              "Use clear, descriptive names that reflect the scenario's purpose",
+              "Provide comprehensive background information to help users understand context",
+              "Include specific details that make the scenario realistic and engaging"
+          ]}
+          delay={0.6}
+        />
       </div>
     </div>
   );
