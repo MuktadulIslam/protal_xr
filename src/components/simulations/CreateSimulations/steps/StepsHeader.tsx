@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { IconType } from 'react-icons'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { simulation_id } from '@/utils/constants'
-import { useFetchAllSimulations } from '@/hooks/useFetchAllSimulations.hook'
+import { useFetchAllSimulations } from '@/hooks/useSimulations.hook'
 import { useEffect, useState } from 'react'
 import { FaChevronDown } from "react-icons/fa";
 

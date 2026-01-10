@@ -14,9 +14,7 @@ import StepsHeader from './StepsHeader';
 import StepInfoBox from './StepInfoBox';
 import { saveToLocalStorage, saveToLocalStorageAsync, readFromLocalStorage } from '@/utils/localStorage.service'
 import { newSimulationStorageName, simulation_id } from '@/utils/constants'
-import { useCreateSimulation } from '@/hooks/useCreateSimulation.hook';
-import { useUpdateSimulation } from '@/hooks/useUpdateSimulation.hook';
-import { useFetchSimulation } from '@/hooks/useFetchSimulation.hook';
+import { useCreateSimulation, useUpdateSimulation, useFetchSimulation  } from '@/hooks/useSimulations.hook';
 import LoadingScreen from '@/components/common/LoadingScreen';
 
 interface SimulationInfoForm {
