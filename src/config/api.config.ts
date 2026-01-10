@@ -11,5 +11,16 @@ export const apiConfig = {
         createSimulation: `${backendBaseURL}/simulations`,
         getSimulation: (id: string) => `${backendBaseURL}/simulations/${id}`,
         updateSimulation: (id: string) => `${backendBaseURL}/simulations/${id}`,
+        getAllSimulations: `${backendBaseURL}/simulations`,
+        // Objectives endpoints
+        getObjectives: (simulationId: string | number) => `${backendBaseURL}/simulations/${simulationId}/objectives`,
+        createObjective: (simulationId: string | number) => `${backendBaseURL}/simulations/${simulationId}/objectives`,
+        updateObjective: (objectiveId: string | number) => `${backendBaseURL}/simulations/objectives/${objectiveId}`,
+        deleteObjective: (objectiveId: string | number) => `${backendBaseURL}/simulations/objectives/${objectiveId}`,
+        // EPAs endpoints
+        getEPAs: (objectiveId: string | number) => `${backendBaseURL}/simulations/objectives/${objectiveId}/epas`,
+        createEPA: (objectiveId: string | number) => `${backendBaseURL}/simulations/objectives/${objectiveId}/epas`,
+        updateEPA: (epaId: string | number) => `${backendBaseURL}/simulations/objectives/epas/${epaId}`,
+        deleteEPA: (epaId: string | number) => `${backendBaseURL}/simulations/objectives/epas/${epaId}`,
     },
 };

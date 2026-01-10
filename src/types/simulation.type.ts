@@ -47,3 +47,10 @@ export interface GetSimulationResponse {
   allow_duplication: boolean;
   access_restriction: 'internal' | 'public';
 }
+
+// Simulation list item type
+export interface SimulationListItem {
+  simulation_id: number;
+  simulation_name: string;
+  simulation_description: string;
+}
