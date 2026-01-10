@@ -10,6 +10,7 @@ import { inputMaxLength } from '@/config';
 import { motion } from 'framer-motion';
 import { HiInformationCircle } from 'react-icons/hi2';
 import SaveActionButton from '@/components/common/SaveActionButton';
+import StepsHeader from './StepsHeader';
 import { saveToLocalStorage, saveToLocalStorageAsync, readFromLocalStorage } from '@/utils/localStorage.service'
 import { newSimulationStorageName, simulation_id } from '@/utils/constants'
 import { useCreateSimulation } from '@/hooks/useCreateSimulation.hook';
@@ -104,23 +105,12 @@ export default function SimulationInformationForm() {
 
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-4"
-        >
-          <div className="flex items-center gap-3">
-            <div className="p-3 bg-linear-to-r from-cyan-500 to-blue-500 rounded-lg">
-              <HiInformationCircle className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900">Simulation Information</h2>
-              <p className="text-gray-600">
-                Provide basic details about your simulation scenario
-              </p>
-            </div>
-          </div>
-        </motion.div>
+        <StepsHeader
+          icon={HiInformationCircle}
+          title="Simulation Information"
+          description="Provide basic details about your simulation scenario"
+          showSimulationSelector={false}
+        />
 
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
