@@ -86,8 +86,6 @@ export default function SimulationInformationForm() {
   };
 
   const onSubmit = async (data: SimulationInfoForm) => {
-    console.log('Form submitted:', data);
-
     if (isExistingSimulation && simulationId) {
       // Update existing simulation
       updateSimulation({

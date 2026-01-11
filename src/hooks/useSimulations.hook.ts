@@ -1,4 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { simulation_id } from '@/utils/constants'
 import { AxiosError } from 'axios';
 import { CreateSimulationRequest, CreateSimulationResponse, GetSimulationResponse, SimulationListItem, UpdateSimulationRequest } from '@/types';
 import { apiConfig } from '@/config';
@@ -8,6 +10,9 @@ import { deleteNewSimulationStoredData } from '@/utils/localStorage.service';
 
 
 export const useCreateSimulation = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
     return useMutation<CreateSimulationResponse, AxiosError, CreateSimulationRequest>({
         mutationFn: async (simulationData: CreateSimulationRequest) => {
             const { data } = await axiosInstance.post<CreateSimulationResponse>(
@@ -18,6 +23,9 @@ export const useCreateSimulation = () => {
         },
         onSuccess: (data) => {
             console.log("Simulation created successfully with ID:", data.simulation_id);
+            const params = new URLSearchParams(searchParams.toString());
+            params.set(simulation_id, data.simulation_id.toString());
+            router.push(`?${params.toString()}`);
             deleteNewSimulationStoredData();
             showSuccessToast("Simulaiton creation successfully done! Now create objectives of this simulations");
         },
