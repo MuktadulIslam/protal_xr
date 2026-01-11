@@ -2,19 +2,22 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import { IoMdAdd } from "react-icons/io";
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import CharacterCounterFormInput from '@/components/common/CharacterCounterFormInput';
 import CharacterCounterTextarea from '@/components/common/CharacterCounterTextarea';
 import { inputMaxLength } from '@/config';
 import { motion } from 'framer-motion';
 import { HiInformationCircle, HiLightBulb } from 'react-icons/hi2';
+import { FaChevronDown } from 'react-icons/fa';
 import SaveActionButton from '@/components/common/SaveActionButton';
 import StepsHeader from './StepsHeader';
 import StepInfoBox from './StepInfoBox';
-import { saveToLocalStorage, saveToLocalStorageAsync, readFromLocalStorage } from '@/utils/localStorage.service'
+import { saveToLocalStorage, saveToLocalStorageAsync, readFromLocalStorage, deleteNewSimulationStoredData } from '@/utils/localStorage.service'
 import { newSimulationStorageName, simulation_id } from '@/utils/constants'
-import { useCreateSimulation, useUpdateSimulation, useFetchSimulation  } from '@/hooks/useSimulations.hook';
+import { useCreateSimulation, useUpdateSimulation, useFetchSimulation } from '@/hooks/useSimulations.hook';
+import { useFetchAccessRestrictions } from '@/hooks/useAccessRestrictions.hook';
 import LoadingScreen from '@/components/common/LoadingScreen';
 
 interface SimulationInfoForm {
@@ -23,10 +26,11 @@ interface SimulationInfoForm {
   scenario_background: string;
   scenario_additional_details: string;
   allow_duplication: boolean;
-  access_restriction: 'internal' | 'public';
+  access_restriction: string;
 }
 
 export default function SimulationInformationForm() {
+  const router = useRouter();
   const [isExistingSimulation, setIsExistingSimulation] = useState(false);
   const { mutate: createSimulation, isPending: isPendingToCreateNewSimulation } = useCreateSimulation();
   const { mutate: updateSimulation, isPending: isPendingToUpdateSimulation } = useUpdateSimulation();
@@ -35,6 +39,9 @@ export default function SimulationInformationForm() {
   const searchParams = useSearchParams();
   const simulationId = searchParams.get(simulation_id);
   const { data: simulationData, isLoading: isFetchingSimulation } = useFetchSimulation(simulationId);
+
+  // Fetch access restrictions from API
+  const { data: accessRestrictions, isLoading: isLoadingAccessRestrictions } = useFetchAccessRestrictions();
 
   const { register, handleSubmit, formState: { errors }, control, setValue } = useForm<SimulationInfoForm>({
     defaultValues: {
@@ -60,7 +67,7 @@ export default function SimulationInformationForm() {
       setValue('access_restriction', simulationData.access_restriction);
     } else if (!isFetchingSimulation) {
       // If no API data or no simulation ID, use localStorage (Priority 2)
-      const localAccessRestriction = (readFromLocalStorage(newSimulationStorageName.simulation_access) as 'internal' | 'public') || 'internal';
+      const localAccessRestriction = (readFromLocalStorage(newSimulationStorageName.simulation_access) as string) || 'internal';
       const localAllowDuplication = readFromLocalStorage(newSimulationStorageName.simulation_allow_duplication) === 'true' ? true :
         readFromLocalStorage(newSimulationStorageName.simulation_allow_duplication) === 'false' ? false : true;
 
@@ -93,6 +100,30 @@ export default function SimulationInformationForm() {
     }
   };
 
+  const handleNewSimulation = () => {
+    // Clear all simulation data from localStorage
+    deleteNewSimulationStoredData();
+
+    // Remove simulation_id from URL
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(simulation_id);
+
+    // Navigate to clean URL
+    const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname;
+    router.push(newUrl);
+
+    // Reset form to default values
+    setValue('simulation_name', '');
+    setValue('simulation_description', '');
+    setValue('scenario_background', '');
+    setValue('scenario_additional_details', '');
+    setValue('allow_duplication', true);
+    setValue('access_restriction', 'internal');
+
+    // Set to new simulation mode
+    setIsExistingSimulation(false);
+  };
+
   return (
     <div className="w-full h-full px-6 py-6 relative">
       {/* Full Screen Loading Overlay */}
@@ -110,6 +141,18 @@ export default function SimulationInformationForm() {
           description="Provide basic details about your simulation scenario"
           showSimulationSelector={false}
         />
+
+        <motion.button
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={handleNewSimulation}
+          className="w-full h-10 bg-linear-to-r text-gray-400 font-semibold rounded-lg border-2 border-dashed border-gray-400 flex justify-center items-center gap-1 mb-4 cursor-pointer"
+        >
+          <IoMdAdd className='w-5 h-5' />
+          Start From New
+        </motion.button>
 
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -157,23 +200,36 @@ export default function SimulationInformationForm() {
               <label htmlFor="access_restriction" className="block text-sm font-semibold text-gray-700 mb-1">
                 Access Restriction <span className="text-red-500">*</span>
               </label>
-              <select
-                id="access_restriction"
-                {...register('access_restriction', {
-                  required: 'Please select an access level',
-                  onChange: (event) => {
-                    saveToLocalStorage(newSimulationStorageName.simulation_access, event.target.value);
-                  },
-                  onBlur: (event) => {
-                    saveToLocalStorageAsync(newSimulationStorageName.simulation_access, event.target.value);
-                  }
-                })}
-                className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 ${errors.access_restriction ? 'border-red-500' : 'border-gray-300'
-                  }`}
-              >
-                <option value="internal">Internal - Only within organization</option>
-                <option value="public">Public - Anyone can access</option>
-              </select>
+              <div className="relative">
+                <select
+                  id="access_restriction"
+                  {...register('access_restriction', {
+                    required: 'Please select an access level',
+                    onChange: (event) => {
+                      saveToLocalStorage(newSimulationStorageName.simulation_access, event.target.value);
+                    },
+                    onBlur: (event) => {
+                      saveToLocalStorageAsync(newSimulationStorageName.simulation_access, event.target.value);
+                    }
+                  })}
+                  className={`peer w-full px-4 py-2.5 border-2 rounded-lg focus:border-cyan-500 outline-none transition-all duration-200 appearance-none cursor-pointer ${errors.access_restriction ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                  disabled={isLoadingAccessRestrictions}
+                >
+                  {isLoadingAccessRestrictions ? (
+                    <option value="">Loading access restrictions...</option>
+                  ) : accessRestrictions && accessRestrictions.length > 0 ? (
+                    accessRestrictions.map((restriction) => (
+                      <option key={restriction} value={restriction}>
+                        {restriction.charAt(0).toUpperCase() + restriction.slice(1)}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="internal">Internal</option>
+                  )}
+                </select>
+                <FaChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 peer-open:rotate-180 transition-transform duration-300 pointer-events-none" size={15} />
+              </div>
               {errors.access_restriction && (
                 <p className="mt-1 text-sm text-red-600">{errors.access_restriction.message}</p>
               )}
@@ -320,9 +376,9 @@ export default function SimulationInformationForm() {
           icon={HiLightBulb}
           heading="Tips for creating effective simulations"
           instructions={[
-              "Use clear, descriptive names that reflect the scenario's purpose",
-              "Provide comprehensive background information to help users understand context",
-              "Include specific details that make the scenario realistic and engaging"
+            "Use clear, descriptive names that reflect the scenario's purpose",
+            "Provide comprehensive background information to help users understand context",
+            "Include specific details that make the scenario realistic and engaging"
           ]}
           delay={0.6}
         />

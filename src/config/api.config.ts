@@ -22,5 +22,7 @@ export const apiConfig = {
         createEPA: (objectiveId: string | number) => `${backendBaseURL}/simulations/objectives/${objectiveId}/epas`,
         updateEPA: (epaId: string | number) => `${backendBaseURL}/simulations/objectives/epas/${epaId}`,
         deleteEPA: (epaId: string | number) => `${backendBaseURL}/simulations/objectives/epas/${epaId}`,
+        // Access Restrictions endpoint
+        getAccessRestrictions: `${backendBaseURL}/simulations/access-restrictions`,
     },
 };

@@ -5,7 +5,7 @@ export interface CreateSimulationRequest {
   scenario_background: string;
   scenario_additional_details: string;
   allow_duplication: boolean;
-  access_restriction: 'internal' | 'public';
+  access_restriction: string;
 }
 
 // Request type for updating a simulation
@@ -16,7 +16,7 @@ export interface UpdateSimulationRequest {
   scenario_background: string;
   scenario_additional_details: string;
   allow_duplication: boolean;
-  access_restriction: 'internal' | 'public';
+  access_restriction: string;
 }
 
 // Response type for created simulation
@@ -27,7 +27,7 @@ export interface CreateSimulationResponse {
   scenario_background: string;
   scenario_additional_details: string;
   allow_duplication: boolean;
-  access_restriction: 'internal' | 'public';
+  access_restriction: string;
   created_at: string;
   updated_at: string;
   start_state: number | null;
@@ -45,7 +45,7 @@ export interface GetSimulationResponse {
   scenario_background: string;
   scenario_additional_details: string;
   allow_duplication: boolean;
-  access_restriction: 'internal' | 'public';
+  access_restriction: string;
 }
 
 // Simulation list item type
