@@ -17,53 +17,46 @@ import SimulationInformationForm from './steps/SimulationInformationForm';
 import CreateObjectives from './steps/CreateObjectives';
 import SelectAvatar from './steps/SelectAvatar';
 import { IoInformationCircleOutline } from "react-icons/io5";
-import CreateState from './steps/CreateState';
 import CreateScene from './steps/CreateScene';
 import AddObjectAnimations from './steps/AddObjectAnimations';
-import FullscreenWrapper from '@/components/common/FullscreenWrapper';
 import { simulation_id, simulationCreateStep } from '@/utils/constants';
+import SimulationStatesBuilder from './steps/SimulationStatesBuilder';
 
 const createSimulationsSteps = [
     {
         stepname: 'info',
         label: 'Info',
         icon: IoInformationCircleOutline,
-        fullScreenShowable: false,
         component: SimulationInformationForm
     },
     {
         stepname: 'objectives',
         label: 'Objectives',
         icon: HiFlag,
-        fullScreenShowable: false,
         component: CreateObjectives
     },
     {
         stepname: 'avatar',
         label: 'Avatar',
         icon: HiUserCircle,
-        fullScreenShowable: false,
         component: SelectAvatar
     },
     {
         stepname: 'state',
         label: 'State',
         icon: HiSquare3Stack3D,
-        fullScreenShowable: true,
-        component: CreateState
+        component: SimulationStatesBuilder
     },
     {
         stepname: 'scene',
         label: 'Scene',
         icon: HiCube,
-        fullScreenShowable: true,
         component: CreateScene
     },
     {
         stepname: 'animations',
         label: 'Animations',
         icon: HiSparkles,
-        fullScreenShowable: true,
         component: AddObjectAnimations
     },
 ];
@@ -130,10 +123,10 @@ export default function CreateSimulationPage() {
     };
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-gray-50 via-blue-50/30 to-cyan-50/30 p-1">
-            <div className="mx-auto flex flex-col">
+        <div className="h-screen bg-linear-to-br from-gray-50 via-blue-50/30 to-cyan-50/30 p-1 overflow-hidden">
+            <div className="mx-auto h-full w-full flex flex-col">
                 {/* Progress Bar Section */}
-                <div className="w-full px-6">
+                <div className="w-full px-6 h-20">
                     <div className="bg-white rounded-2xl shadow-lg border border-gray-200 px-5 pt-2 pb-6 mb-1">
                         <div className="flex items-center gap-4">
                             {/* Previous Button */}
@@ -182,14 +175,12 @@ export default function CreateSimulationPage() {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: direction > 0 ? -50 : 50 }}
                         transition={{ duration: 0.3 }}
-                        className='w-full flex-1'
+                        className='w-full h-full overflow-auto'
                     >
-                        <FullscreenWrapper showIcon={createSimulationsSteps[currentStep - 1].fullScreenShowable} fullScreenByKey={false}>
-                            {(() => {
-                                const StepComponent = createSimulationsSteps[currentStep - 1].component;
-                                return <StepComponent />;
-                            })()}
-                        </FullscreenWrapper>
+                        {(() => {
+                            const StepComponent = createSimulationsSteps[currentStep - 1].component;
+                            return <StepComponent />;
+                        })()}
                     </motion.div>
                 </AnimatePresence>
             </div>
